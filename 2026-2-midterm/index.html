@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ko">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>배곧고1 2학기 1차 정기시험 대비</title><link rel="stylesheet" href="styles.css"></head>
+<body>
+<header class="site-header"><div class="header-inner">
+  <div class="brand">배곧고1 국어 중간고사 대비<small>공통국어2 · 2026학년도 2학기 1차 정기시험</small></div>
+</div></header>
+<main class="container">
+  <section class="hero">
+    <h1>시험 범위별 20문제<br>즉시 채점 훈련</h1>
+    <p>답을 선택하면 즉시 정오답을 확인하고, 틀린 문제는 각 페이지 하단의 <b>오답 해설</b>에 자동으로 모입니다.</p>
+    <div class="notice">범위 주의: <b>「용비어천가」 제외</b> · 4-(1)의 <b>두 번째 소설 제외</b> · 학교 시험은 선택형 20문제(논술형 없음)</div>
+    <table class="range-table">
+      <tr><th>시험 범위</th><th>학습 기준</th></tr>
+      <tr><td>현대 시 감상</td><td>「참회록」, 「어느 날 고궁을 나오면서」, 「대설주의보」 · 학습지 1~12쪽</td></tr>
+      <tr><td>「노찬성과 에반」</td><td>교과서 47~63쪽 · 학습지 1~12쪽 · 전략 부분 유인물 전체</td></tr>
+      <tr><td>국어의 변화와 발전</td><td>학습지 1~14쪽 · 「용비어천가」는 출제 제외</td></tr>
+      <tr><td>4-(1) 문제를 해결하는 말과 글</td><td>「인공 지능과 인간의 공존」, 「인공 지능, 일상을 혁신하는 기술의 힘」 · 두 번째 소설 제외</td></tr>
+    </table>
+  </section>
+  <section class="grid" id="chapter-grid">
+    <a class="chapter-card" data-id="chamhoerok" href="01-chamhoerok.html"><span class="chapter-no">CHAPTER 01</span><h2>윤동주 「참회록」</h2><p>자아 성찰 · 역사 인식 · 거울의 상징</p><div class="progress-mini"></div></a>
+    <a class="chapter-card" data-id="gogung" href="02-gogung.html"><span class="chapter-no">CHAPTER 02</span><h2>김수영 「어느 날 고궁을 나오면서」</h2><p>소시민성 · 자기반성 · 현실 비판</p><div class="progress-mini"></div></a>
+    <a class="chapter-card" data-id="daeseol" href="03-daeseol.html"><span class="chapter-no">CHAPTER 03</span><h2>최승호 「대설주의보」</h2><p>눈보라 · 백색의 계엄령 · 1980년대 현실</p><div class="progress-mini"></div></a>
+    <a class="chapter-card" data-id="evan" href="04-evan.html"><span class="chapter-no">CHAPTER 04</span><h2>김애란 「노찬성과 에반」</h2><p>책임과 욕망 · 죄책감 · 사회 문제</p><div class="progress-mini"></div></a>
+    <a class="chapter-card" data-id="language" href="05-language.html"><span class="chapter-no">CHAPTER 05</span><h2>국어의 변화와 발전</h2><p>중세·현대 국어 비교 · 음운·문법·어휘 변화</p><div class="progress-mini"></div></a>
+    <a class="chapter-card" data-id="aicoexist" href="06-ai-coexist.html"><span class="chapter-no">CHAPTER 06</span><h2>「인공 지능과 인간의 공존」</h2><p>노동의 미래 · 두 관점 · 인간성</p><div class="progress-mini"></div></a>
+    <a class="chapter-card" data-id="aiinnovation" href="07-ai-innovation.html"><span class="chapter-no">CHAPTER 07</span><h2>「인공 지능, 일상을 혁신하는 기술의 힘」</h2><p>AI 활용 · 복합양식 · 타당성·신뢰성</p><div class="progress-mini"></div></a>
+  </section>
+</main>
+<footer class="footer">배곧고1 시험 대비 · 수업 범위와 제공 학습 자료를 기준으로 구성</footer>
+<script>
+document.querySelectorAll(".chapter-card").forEach(card=>{
+ const id=card.dataset.id, s=JSON.parse(localStorage.getItem("baegot2026mid:"+id)||"{}");
+ const n=Object.keys(s).length; card.querySelector(".progress-mini").textContent=n?("풀이 기록 "+n+"/20"):"아직 풀지 않음";
+});
+</script>
+</body></html>
