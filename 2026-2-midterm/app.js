@@ -1,12 +1,31 @@
-
 (() => {
   const id = window.CHAPTER_ID;
   const chapter = window.EXAM_DATA && window.EXAM_DATA[id];
   if(!chapter) return;
+
+  const esc = s => String(s ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[ch]));
+  const letter = i => ["①","②","③","④","⑤"][i] || String(i+1);
+
   document.title = chapter.title + " | 배곧고1 중간고사 대비";
   document.querySelector("#chapter-title").textContent = chapter.title;
   document.querySelector("#chapter-subtitle").textContent = chapter.subtitle || "";
   document.querySelector("#chapter-range").textContent = chapter.range || "";
+
+  const sourceBox = document.querySelector("#source-box");
+  if(sourceBox && chapter.sourceText){
+    sourceBox.innerHTML = `
+      <div class="source-head">
+        <div>
+          <div class="source-kicker">문제 풀이용 제시문</div>
+          <h2>${esc(chapter.sourceTitle || "공통 제시문")}</h2>
+          <p>${esc(chapter.sourceLabel || "")}</p>
+        </div>
+        <a class="btn btn-light source-jump" href="#questions">문제로 이동 ↓</a>
+      </div>
+      <div class="source-text">${esc(chapter.sourceText)}</div>
+    `;
+  }
+
   const key = "baegot2026mid:"+id;
   const saved = JSON.parse(localStorage.getItem(key) || "{}");
   const wrap = document.querySelector("#questions");
@@ -16,7 +35,6 @@
   const fill = document.querySelector("#progress-fill");
 
   function save(){ localStorage.setItem(key, JSON.stringify(saved)); }
-  function letter(i){ return ["①","②","③","④","⑤"][i] || String(i+1); }
 
   function grade(qi, selected, restore=false){
     if(saved[qi] !== undefined && !restore) return;
@@ -50,17 +68,16 @@
     const choices = q.choices.map((c, ci)=>`
       <label class="choice">
         <input type="radio" name="q${qi}" value="${ci}">
-        <span><b>${letter(ci)}</b> ${c}</span>
+        <span><b>${letter(ci)}</b> ${esc(c)}</span>
       </label>`).join("");
     card.innerHTML=`
       <div class="qnum">문제 ${qi+1} / 20</div>
-      <div class="qtext">${q.q}</div>
+      <div class="qtext">${esc(q.q)}</div>
       <div class="choices">${choices}</div>
-      <div class="feedback"></div>`;
+      <div class="feedback"></div>
+      <a class="source-link" href="#source-box">제시문 다시 보기 ↑</a>`;
     wrap.appendChild(card);
-    card.querySelectorAll("input").forEach(input => {
-      input.addEventListener("change", e => grade(qi, Number(e.target.value)));
-    });
+    card.querySelectorAll("input").forEach(input => input.addEventListener("change", e => grade(qi, Number(e.target.value))));
   });
 
   Object.keys(saved).forEach(k => {
@@ -86,9 +103,9 @@
       const div=document.createElement("div"); div.className="wrong-item";
       div.innerHTML=`
         <h3>${qi+1}번 오답</h3>
-        <p><b>내 답:</b> ${letter(selected)} ${q.choices[selected]}</p>
-        <p><b>정답:</b> ${letter(q.answer)} ${q.choices[q.answer]}</p>
-        <p class="explain"><b>해설:</b> ${q.exp}</p>
+        <p><b>내 답:</b> ${letter(selected)} ${esc(q.choices[selected])}</p>
+        <p><b>정답:</b> ${letter(q.answer)} ${esc(q.choices[q.answer])}</p>
+        <p class="explain"><b>해설:</b> ${esc(q.exp)}</p>
         <a class="backlink" href="#q-${qi+1}">문제로 돌아가기 ↑</a>`;
       wrongWrap.appendChild(div);
     });
