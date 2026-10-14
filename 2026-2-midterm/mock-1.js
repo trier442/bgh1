@@ -22,25 +22,24 @@ const btn=document.getElementById('submitExam'),status=document.getElementById('
 const stored=JSON.parse(sessionStorage.getItem('baegot-mock-last')||'null');
 if(stored && stored.id===exam.id){
  document.getElementById('studentName').value=stored.name||'';
- document.getElementById('studentClass').value=stored.group||'';
 }
 let attemptId=crypto.randomUUID ? crypto.randomUUID() : ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,c=>(c^crypto.getRandomValues(new Uint8Array(1))[0]&15>>c/4).toString(16));
 async function submit(){
  if(submission)return;
- const name=document.getElementById('studentName').value.trim(),group=document.getElementById('studentClass').value.trim();
+ const name=document.getElementById('studentName').value.trim();
  if(name.length<2 || name.length>30){status.textContent='학생 이름을 2~30자로 입력해 주세요.';document.getElementById('studentName').focus();return;}
  const missing=picks.findIndex(v=>v===null);
  if(missing>=0){status.textContent='미응답 '+(missing+1)+'번 문항이 있습니다. 모두 선택해 주세요.';location.hash='#mock-q'+(missing+1);return;}
  if(!window.confirm(name+' 학생의 답안을 최종 제출하시겠습니까? 제출 후에는 수정할 수 없습니다.'))return;
  btn.disabled=true;status.textContent='안전하게 채점하고 기록하는 중입니다. 잠시 기다려 주세요.';
  try{
- const {data:payload,error}=await sb.rpc('submit_baegot_mock',{p_attempt_id:attemptId,p_student_name:name,p_student_class:group,p_answers:picks,p_elapsed_seconds:Math.floor((Date.now()-started)/1000)});
+ const {data:payload,error}=await sb.rpc('submit_baegot_mock',{p_attempt_id:attemptId,p_student_name:name,p_student_class:'',p_answers:picks,p_elapsed_seconds:Math.floor((Date.now()-started)/1000)});
  if(error)throw Error(error.message||'제출이 처리되지 않았습니다.');
  submission=true;
  document.querySelectorAll('.mock-choices input').forEach(x=>x.disabled=true);
- document.getElementById('studentName').disabled=true;document.getElementById('studentClass').disabled=true;
+ document.getElementById('studentName').disabled=true;
  btn.textContent='제출 완료'; status.textContent='제출이 완료되어 교사 성적표에 기록되었습니다.';
- sessionStorage.setItem('baegot-mock-last',JSON.stringify({id:exam.id,name,group}));
+ sessionStorage.setItem('baegot-mock-last',JSON.stringify({id:exam.id,name}));
  document.getElementById('scoreView').textContent=payload.score+'점 · '+payload.correct_count+'/30 정답';
  document.getElementById('resultDetail').textContent='학생: '+name+' · 제출 결과는 교사용 성적 확인 화면에서 열람할 수 있습니다.';
  const wrap=document.getElementById('review');
