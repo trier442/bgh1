@@ -1,5 +1,5 @@
 (() => {
-const exam=window.BAEGOT_MOCK; const config=window.EXAM_CONFIG;
+const exam=window.BAEGOT_MOCK; const config=window.EXAM_CONFIG; const sb=window.supabase.createClient(config.url,config.key);
 const sections=document.getElementById('examSections'),nav=document.getElementById('examNav');
 const picks=Array(exam.questions.length).fill(null); const started=Date.now();
 let submission=false;
@@ -34,9 +34,8 @@ async function submit(){
  if(!window.confirm(name+' 학생의 답안을 최종 제출하시겠습니까? 제출 후에는 수정할 수 없습니다.'))return;
  btn.disabled=true;status.textContent='안전하게 채점하고 기록하는 중입니다. 잠시 기다려 주세요.';
  try{
- const resp=await fetch(config.url+'/rest/v1/rpc/submit_baegot_mock',{method:'POST',headers:{'apikey':config.key,'Authorization':'Bearer '+config.key,'Content-Type':'application/json'},body:JSON.stringify({p_attempt_id:attemptId,p_student_name:name,p_student_class:group,p_answers:picks,p_elapsed_seconds:Math.floor((Date.now()-started)/1000)})});
- const payload=await resp.json();
- if(!resp.ok)throw Error(payload.message||'제출이 처리되지 않았습니다.');
+ const {data:payload,error}=await sb.rpc('submit_baegot_mock',{p_attempt_id:attemptId,p_student_name:name,p_student_class:group,p_answers:picks,p_elapsed_seconds:Math.floor((Date.now()-started)/1000)});
+ if(error)throw Error(error.message||'제출이 처리되지 않았습니다.');
  submission=true;
  document.querySelectorAll('.mock-choices input').forEach(x=>x.disabled=true);
  document.getElementById('studentName').disabled=true;document.getElementById('studentClass').disabled=true;
